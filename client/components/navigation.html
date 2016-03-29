@@ -1,0 +1,16 @@
+<template name='navigation'>
+	<ul>
+		<li><a href='{{pathFor route="home"}}'>Home</a></li>
+		{{#if currentUser}}
+			{{#each rooms}}
+				{{#unless full}}
+					<li><a href='/room/{{number}}'>{{name}}</a></li>
+				{{/unless}}
+			{{/each}}
+			<li><a href='#' class='logout'>Logout</a></li>
+		{{else}}
+			<li><a href='{{pathFor route="register"}}'>Register</a></li>
+			<li><a href='{{pathFor route="login"}}'>Login</a></li>
+		{{/if}}
+	</ul>
+</template>

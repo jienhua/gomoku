@@ -1,0 +1,11 @@
+<template name='board'>
+
+	<div class='board'>
+
+	{{#each cell}}
+		<img src='/images/{{position}}' class='cell' name='{{number}}' style='top:{{top}}; left:{{left}};'/>
+	{{/each}}
+
+	</div>
+
+</template>

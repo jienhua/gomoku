@@ -1,0 +1,52 @@
+<template name='room'>
+{{#if currentUser}}
+	Your name is {{username}}
+{{/if}}
+<div class='row'>
+	<div class='col-sm-3'>
+		<h3>This is {{name}}</h3>
+		{{#if isStart}}
+			{{gameName}}
+			{{#unless isGameEnd}}
+				<br>
+				You are using <img src="/images/{{blackOrWhite}}" />
+				<br>
+				{{whosTurn}}
+			{{else}}
+				<br>
+				The Winner is : {{winner}}
+			{{/unless}}
+		{{else}}
+		<h4>Player List</h4>
+		<div class='player_list'>
+			==================
+			{{#each player_list.players}}
+				<p><strong>{{this}}</strong> is ready to Play</p>
+			{{/each}}
+			==================
+		</div>
+		{{/if}}
+<!-- 		<h4>Style</h4>
+		<select id='piece_style' value='normal'>
+			<option value='normal'>Normal</option>
+			<option value='trid'>Traditional</option>
+		</select> -->
+		<br><br>
+		{{#if isStart}}
+			<input type='button' class='btn btn-info' id='new_game_btn' value='New Game'><br><br>
+		{{else}}
+			<input type='button' class='btn btn-success' id='ready_btn' value='{{ready}}'><br><br>
+			{{#if full}}
+				<input type='button' class='btn btn-primary' id='start_btn' value='Start'><br><br>
+			{{/if}}
+		{{/if}}
+		<input type='button' class='btn btn-danger' id='leave_btn' value='Leave'><br><br>
+		
+	</div>
+	<div class='col-sm-9'>
+		{{#if isStart}}
+			{{> board roomNumber=roomNumber gameId=gameId }}
+		{{/if}}
+	</div>
+</div>
+</template>

@@ -1,0 +1,12 @@
+.board{
+	position:relative;
+	/*border-style: solid;*/
+	overflow: auto;
+	min-height: 705px;
+	max-height: 720px;
+	max-width: 705px;
+}
+.cell{
+	position: absolute;
+	
+}
