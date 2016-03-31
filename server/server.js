@@ -44,7 +44,7 @@ Meteor.methods({
 	},
 	'create_board':function(gameId, roomNumber){
 		
-		var newBoard = Boards.findOne({name:'new_board'});
+		var newBoard = Boards.findOne({'name':'new_board'});
 		newBoard.gameId = gameId;
 		newBoard.name = 'used';
 		delete newBoard._id;
@@ -57,7 +57,7 @@ Meteor.methods({
 	},
 	'putPiece':function(boardId, number, gameId){
 		
-		var currentGame = Games.findOne({_id:gameId});
+		var currentGame = Games.findOne({'_id':gameId});
 		var pieceType = whichPieces(currentGame);
 		
 		if(isRightTurn(currentGame) && 
@@ -148,49 +148,37 @@ Meteor.methods({
 	},
 	'surrender':function(gameId, roomNumber){
 		var currentUserName = Meteor.user().username;
-		var currentGame = Games.findOne({_id:gameId});
-		var winner = '';
-		if(currentGame.player1 === currentUserName){
-			winner = currentGame.player2;
-		}else{
-			winner = currentGame.player1;
-		} 
-		Games.update(
-			{
-				'_id': gameId
-			},
-			{
-				$set:{
-					'surrender': currentUserName,
-					'winner': winner,
-					'end': true
-				}
-			}
-		);
+		surrender(gameId, currentUserName);
 	},
 	'reset_game': function(roomNumber){
-		Rooms.update(
-			{
-				'number': roomNumber
-			},
-			{
-				$set:{
-					'isStart': false,
-					'full': false,
-					'gameId': '',
-					'boardId': '',
-					'players':[]
-				}
-			}
-		);
+		resetGame(roomNumber);
 	},
 	'leave_room':function(roomNumber){
+		var currentUserName = Meteor.user().username;
 		// check if game start in this room
 		var room = Rooms.findOne({'number': roomNumber});
 		if(room.isStart){
-			console.log('isStart is true');			
-		}else{
-			console.log('isStart is false');
+			var gameId = room.gameId;
+			surrender(gameId, currentUserName);
+		}
+		// check if user is in the ready list
+		if(room.players.indexOf(currentUserName) >= 0){
+			Rooms.update(
+				{
+					'number': roomNumber
+				},
+				{
+					$pull:{
+						'players': currentUserName
+					}
+				}
+			);
+		}	
+	},
+	'checkRoomPlayer':function(roomNumber){
+		var room = Rooms.findOne({'number': roomNumber});
+		if(room.players.length == 0){
+			resetGame(roomNumber);
 		}
 	}
 });
@@ -254,13 +242,24 @@ function checkWin(currentGame, boardId, number){
 		list = currentBoard.p2_put;
 	}
 	
-	if(checkLine(list, x, y, 0, 1) + checkLine(list, x, y, 0, -1) + 1  === 5 ||
-	   checkLine(list, x, y, 1, 0) + checkLine(list, x, y, -1, 0) + 1  === 5 ||
-	   checkLine(list, x, y, 1, 1) + checkLine(list, x, y, -1, -1) + 1 === 5 ||
-	   checkLine(list, x, y, -1, 1) + checkLine(list, x, y, 1, -1) + 1 === 5){
+	if(checkLine(list, x, y, 0, 1) + checkLine(list, x, y, 0, -1) + 1  >= 5 ||
+	   checkLine(list, x, y, 1, 0) + checkLine(list, x, y, -1, 0) + 1  >= 5 ||
+	   checkLine(list, x, y, 1, 1) + checkLine(list, x, y, -1, -1) + 1 >= 5 ||
+	   checkLine(list, x, y, -1, 1) + checkLine(list, x, y, 1, -1) + 1 >= 5){
 
 		result = true;
 	}
+	// else{
+	// 	console.log('List: '+list);
+	// 	// |  up to down
+	// 	console.log('1| 1: '+checkLine(list, x, y, 0, 1)+' /2: '+checkLine(list, x, y, 0, -1));
+	// 	// -  left to right
+	// 	console.log('2| 1: '+checkLine(list, x, y, 1, 0)+' /2: '+checkLine(list, x, y, -1, 0));
+	// 	// \  left up to right down
+	// 	console.log('3| 1: '+checkLine(list, x, y, 1, 1)+' /2: '+checkLine(list, x, y, -1, -1));
+	// 	// /  left down to right up
+	// 	console.log('4| 1: '+checkLine(list, x, y, -1, 1)+' /2: '+checkLine(list, x, y, 1, -1));
+	// }
 
 	return result;
 }
@@ -273,9 +272,11 @@ function checkLine(list, x, y, dx, dy){
 		x += dx; 
 		y += dy;
 		var number = (y*17) + x;
-		if(isInBound(x, y) && list.indexOf(number) >= 0){
-			link += 1;
+		if(!isInBound(x, y) || list.indexOf(number) < 0){
+			return link;
 		}
+
+		link+=1;
 	}
 	
 	return link;
@@ -287,3 +288,43 @@ function isInBound(x, y){
 	else
 		return true;
 } 
+
+function surrender(gameId, currentUserName){
+	var winner = '';
+	var currentGame = Games.findOne({_id:gameId});
+	if(currentGame.player1 === currentUserName){
+		winner = currentGame.player2;
+	}else{
+		winner = currentGame.player1;
+	} 
+	Games.update(
+		{
+			'_id': gameId
+		},
+		{
+			$set:{
+				'surrender': currentUserName,
+				'winner': winner,
+				'end': true
+			}
+		}
+	);	
+}
+
+function resetGame(roomNumber){
+	
+	Rooms.update(
+		{
+			'number': roomNumber
+		},
+		{
+			$set:{
+				'isStart': false,
+				'full': false,
+				'gameId': '',
+				'boardId': '',
+				'players':[]
+			}
+		}
+	);
+}

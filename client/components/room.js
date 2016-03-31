@@ -99,7 +99,7 @@ Template.room.events({
 		var user = Meteor.user();
 		if(Rooms.findOne({$and:[{_id:this._id},{players:{$in:[user.username]}}]}))
 		{
-			// fidn the player in the playerlist, delete player from list
+			// find the player in the playerlist, delete player from list
 			Rooms.update(
 				{_id:this._id}, 
 				{$pull:{players:user.username}}
@@ -144,7 +144,15 @@ Template.room.events({
 	},
 	'click #leave_btn':function(event){
 		var roomNumber = this.number;
-		Meteor.call('leave_room', roomNumber);
+		//if(confirm('Leave the room? if you are currently in the game, you will automatically lost the game.')){}
+		Meteor.call('leave_room', roomNumber, function(error, result){
+			if(error){
+				throw new Meteor.Error('leave room Error', 'Error when leaving the room');
+			}else{
+				Meteor.call('checkRoomPlayer', roomNumber);
+			}
+		});
+		Router.go('lobby');
 	}
 });
 
