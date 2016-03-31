@@ -1,6 +1,8 @@
 # Mrhaha Gomoku
 Making a Gomoku game with MeteorJS
 
+Here is [Sample] (http://52.38.162.182/).
+
 ## Installation
 
 1. Make sure you have meteor install
