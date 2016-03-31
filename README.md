@@ -9,6 +9,7 @@ Here is [Sample] (http://52.38.162.182/).
 2. `git clone git@github.com:jienhua/gomoku.git`
 3. `cd gomoku`
 4. `meteor`
+5. Go to your brower with `http://localhost:3000/`
 
 ## Usage
 
