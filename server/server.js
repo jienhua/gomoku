@@ -2,8 +2,8 @@ Meteor.methods({
 	
 	'addPlayerIntoRoom': function(number, userId){
 		return Rooms.update(
-			{number: number},
-			{$push:{current_players: userId}}
+			{'number': number},
+			{$push:{'current_players': userId}}
 		);
 	},
 	'create_game':function(players, roomNumber){
@@ -29,14 +29,15 @@ Meteor.methods({
 			createdAt: new Date,
 			player1: player1,
 			player2: player2,
+			surrender:'',
 			winner: '',
 			end: false
 		});
 
 		Rooms.update({number:roomNumber}, 
 					 {$set:{
-					 	gameId: newGame,
-					 	isStart: true 
+					 	'gameId': newGame,
+					 	'isStart': true 
 					 }});
 
 		return newGame;
@@ -50,7 +51,7 @@ Meteor.methods({
 		newBoard = Boards.insert(newBoard);
 		// console.log(roomNumber);
 		// console.log(newBoard);
-		Rooms.update({number:roomNumber},{$set:{boardId: newBoard}});
+		Rooms.update({'number':roomNumber},{$set:{'boardId': newBoard}});
 
 		return newBoard;
 	},
@@ -80,7 +81,7 @@ Meteor.methods({
 							'pieces.$.move': 'moved'
 						},
 						$push:{
-							p1_put: parseInt(number)
+							'p1_put': parseInt(number)
 						}
 							
 					}
@@ -103,7 +104,7 @@ Meteor.methods({
 							'pieces.$.move': 'moved'
 						},
 						$push:{
-							p2_put: parseInt(number)
+							'p2_put': parseInt(number)
 						}
 							
 					}
@@ -113,11 +114,11 @@ Meteor.methods({
 
 			Games.update(
 				{
-					_id: gameId
+					'_id': gameId
 				},
 				{
 					$inc:{
-						turn:1
+						'turn':1
 					}
 				}
 			);
@@ -129,12 +130,12 @@ Meteor.methods({
 				console.log('winner: ' + currentUserName);
 				Games.update(
 					{
-						_id: gameId
+						'_id': gameId
 					},
 					{
 						$set:{
-							winner: currentUserName,
-							end: true
+							'winner': currentUserName,
+							'end': true
 						}
 					}
 				);
@@ -143,6 +144,53 @@ Meteor.methods({
 			return true;
 		}else{
 			return false;
+		}
+	},
+	'surrender':function(gameId, roomNumber){
+		var currentUserName = Meteor.user().username;
+		var currentGame = Games.findOne({_id:gameId});
+		var winner = '';
+		if(currentGame.player1 === currentUserName){
+			winner = currentGame.player2;
+		}else{
+			winner = currentGame.player1;
+		} 
+		Games.update(
+			{
+				'_id': gameId
+			},
+			{
+				$set:{
+					'surrender': currentUserName,
+					'winner': winner,
+					'end': true
+				}
+			}
+		);
+	},
+	'reset_game': function(roomNumber){
+		Rooms.update(
+			{
+				'number': roomNumber
+			},
+			{
+				$set:{
+					'isStart': false,
+					'full': false,
+					'gameId': '',
+					'boardId': '',
+					'players':[]
+				}
+			}
+		);
+	},
+	'leave_room':function(roomNumber){
+		// check if game start in this room
+		var room = Rooms.findOne({'number': roomNumber});
+		if(room.isStart){
+			console.log('isStart is true');			
+		}else{
+			console.log('isStart is false');
 		}
 	}
 });
@@ -194,7 +242,7 @@ function isAvailableMove(boardId, number){
 
 function checkWin(currentGame, boardId, number){
 	var turn = currentGame.turn;
-	var currentBoard = Boards.findOne({_id:boardId});
+	var currentBoard = Boards.findOne({'_id':boardId});
 	var list;
 	var result = false;
 	var y = Math.floor(number/17);

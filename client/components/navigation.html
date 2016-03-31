@@ -1,6 +1,7 @@
 <template name='navigation'>
 	<ul>
 		<li><a href='{{pathFor route="home"}}'>Home</a></li>
+		<li><a href='{{pathFor route="lobby"}}'>Lobby</a></li>
 		{{#if currentUser}}
 			{{#each rooms}}
 				{{#unless full}}

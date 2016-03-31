@@ -67,6 +67,20 @@ Template.room.helpers({
 		var gameId = this.gameId;
 		var currentGame = Games.findOne({_id: gameId});
 		return currentGame.winner;
+	},
+	'isSurrender':function(){
+		var gameId = this.gameId;
+		var currentGame = Games.findOne({_id: gameId});
+		if(currentGame.surrender === ''){
+			return false;
+		}else{
+			return true;
+		}
+	},
+	'surrender':function(){
+		var gameId = this.gameId;
+		var currentGame = Games.findOne({_id: gameId});
+		return currentGame.surrender;
 	}
 
 });
@@ -110,21 +124,44 @@ Template.room.events({
 
 		// var gameId;
 		var roomNumber = this.number;
-
-		Meteor.call('create_game', this.players, roomNumber, function(error, result){
-			if(error){
-				throw new Meteor.Error('Create Game Error', 'There is a error creating game');
-			}else{
-
-				Meteor.call('create_board', result, roomNumber, function(error, result){
-					if(error){
-						throw new Meteor.Error('Create Board Error', 'There is a error createing board');
-					}
-				});
-			}
-		});
+		var players = this.players;
+		startNewGame(roomNumber, players);
+	},
+	'click #surrender_btn': function(event){
+		console.log('clikc surrender button');
+		var gameId = this.gameId;
+		console.log('gameId: ' + gameId);
+		var currentGame = Games.findOne({_id: gameId});
+		var roomNumber = this.number;
+		var surrender = confirm('Do you wnat to surrender this game?');
+		if(surrender){
+			Meteor.call('surrender', gameId, roomNumber);
+		}
+	},
+	'click #reset_game_btn': function(event){
+		var roomNumber = this.number;
+		Meteor.call('reset_game', roomNumber);
+	},
+	'click #leave_btn':function(event){
+		var roomNumber = this.number;
+		Meteor.call('leave_room', roomNumber);
 	}
 });
+
+function startNewGame(roomNumber, players){
+	Meteor.call('create_game', players, roomNumber, function(error, result){
+		if(error){
+			throw new Meteor.Error('Create Game Error', 'There is a error creating game');
+		}else{
+				Meteor.call('create_board', result, roomNumber, function(error, result){
+				if(error){
+					throw new Meteor.Error('Create Board Error', 'There is a error createing board');
+				}
+			});
+		}
+	});
+}
+
 
 // window.onbeforeunload = function (event) {
 //     var message = 'Important: Please click on \'Save\' button to leave this page.';
@@ -137,6 +174,6 @@ Template.room.events({
 //     return message;
 // };
 
-window.onbeforeunload = function () {
-    return "Are you sure that you want to leave this page?";
-}
+// window.onbeforeunload = function () {
+//     return "Are you sure that you want to leave this page?";
+// }

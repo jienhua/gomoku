@@ -1,6 +1,6 @@
 <template name='room'>
 {{#if currentUser}}
-	Your name is {{username}}
+	Hello, {{username}} !!
 {{/if}}
 <div class='row'>
 	<div class='col-sm-3'>
@@ -13,6 +13,10 @@
 				<br>
 				{{whosTurn}}
 			{{else}}
+				{{#if isSurrender}}
+					<br>
+					{{surrender}} surrendered.	
+				{{/if}}
 				<br>
 				The Winner is : {{winner}}
 			{{/unless}}
@@ -33,14 +37,18 @@
 		</select> -->
 		<br><br>
 		{{#if isStart}}
-			<input type='button' class='btn btn-info' id='new_game_btn' value='New Game'><br><br>
+			{{#unless isSurrender}}
+				<input type='button' class='btn btn-info' id='surrender_btn' value='Surrender'><br><br>
+			{{else}}
+				<input type='button' class='btn btn-info' id='reset_game_btn' value='Reset Game'><br><br>
+			{{/unless}}
 		{{else}}
 			<input type='button' class='btn btn-success' id='ready_btn' value='{{ready}}'><br><br>
 			{{#if full}}
 				<input type='button' class='btn btn-primary' id='start_btn' value='Start'><br><br>
 			{{/if}}
 		{{/if}}
-		<input type='button' class='btn btn-danger' id='leave_btn' value='Leave'><br><br>
+		<input type='button' class='btn btn-danger' id='leave_btn' value='Leave Room'><br><br>
 		
 	</div>
 	<div class='col-sm-9'>

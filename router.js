@@ -6,6 +6,8 @@ Router.route('/register');
 
 Router.route('/login');
 
+Router.route('/lobby');
+
 Router.route('/room/:number',{
 	name: 'room',
 	template:'room',

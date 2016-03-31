@@ -9,7 +9,7 @@ Template.login.events({
 			}else{
 				var currentUser = Meteor.userId();
 				Meteor.users.update({_id: currentUser}, {$set:{'profile.login': true}});
-				Router.go('home');
+				Router.go('lobby');
 			}
 		});
 	}
