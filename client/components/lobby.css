@@ -1,0 +1,16 @@
+.room{
+	border-style: solid;
+	margin-right: 30px;
+	margin-left: 30px;
+	width: 100px;
+	padding: 20px;
+	border-radius: 5px;
+	color: gray;
+	box-shadow:0 1px 7px rgba(0,0,0,0.4);
+    -webkit-box-shadow:0 1px 7px rgba(0,0,0,0.4);
+    -moz-box-shadow:0 1px 7px rgba(0,0,0,0.4);
+    -ms-box-shadow:0 1px 7px rgba(0,0,0,0.4);
+}
+.jumbotron{
+	background-color: white;
+}
