@@ -139,6 +139,8 @@ Meteor.methods({
 						}
 					}
 				);
+
+				modifyPoint(currentUserName, 'checkWin', gameId);
 			}
 
 			return true;
@@ -149,6 +151,7 @@ Meteor.methods({
 	'surrender':function(gameId, roomNumber){
 		var currentUserName = Meteor.user().username;
 		surrender(gameId, currentUserName);
+		modifyPoint(currentUserName, 'surrender', gameId);
 	},
 	'reset_game': function(roomNumber){
 		resetGame(roomNumber);
@@ -158,8 +161,16 @@ Meteor.methods({
 		// check if game start in this room
 		var room = Rooms.findOne({'number': roomNumber});
 		if(room.isStart){
-			var gameId = room.gameId;
-			surrender(gameId, currentUserName);
+			if(room.players.length == 2){
+				var gameId = room.gameId;
+				var currentGame = Games.findOne({'_id': gameId});
+				if(!currentGame.end){
+					surrender(gameId, currentUserName);
+					modifyPoint(currentUserName, 'leave_room', gameId);
+				}	
+			}else{
+				resetGame(roomNumber);
+			}
 		}
 		// check if user is in the ready list
 		if(room.players.indexOf(currentUserName) >= 0){
@@ -173,7 +184,7 @@ Meteor.methods({
 					}
 				}
 			);
-		}	
+		}
 	},
 	'checkRoomPlayer':function(roomNumber){
 		var room = Rooms.findOne({'number': roomNumber});
@@ -327,4 +338,101 @@ function resetGame(roomNumber){
 			}
 		}
 	);
+}
+
+function findTitle(point){
+	
+	var title ='';
+	if(point <= 0){
+		title = 'YourMonIsCrying';
+	}else if(point >= 1 && point < 5){
+		title = 'Noob';
+	}else if(point >= 5 && point < 15){
+		title = 'Newbie';
+	}else if(point >= 15 && point <20){
+		title = 'KnowTheRules';
+	}else if(point >= 20 && point < 30){
+		title = 'Skilled';
+	}else if(point >= 30 && point < 9999){
+		title = 'Profession';
+	}else if(point > 9999){
+		title = 'God of Gomoku';
+	}
+	return title;
+}
+
+function modifyPoint(name, title, gameId){
+	if(title === 'checkWin'){
+		var winner = name;
+		var loser = '';
+		var currentGame = Games.findOne({'_id': gameId});
+		if(currentGame.player1 === winner){
+			loser = currentGame.player2;
+		}else{
+			loser = currentGame.player1;
+		}
+		console.log(title);
+		console.log('winner: ' + winner);
+		console.log('loser: ' + loser);
+		// modified point
+	}else{
+
+		var winner ='';
+		var loser = name;
+		var currentGame = Games.findOne({'_id': gameId});
+		if(currentGame.player1 === loser){
+			winner = currentGame.player2;
+		}else{
+			winner = currentGame.player1;
+		}
+
+		console.log(title);
+		console.log('winner: ' + winner);
+		console.log('loser: ' + loser);
+	}
+
+	Meteor.users.update(
+		{
+			'username':winner
+		},
+		{
+			$inc:{
+				'profile.rankPoint':1
+			}
+		}
+	);
+	
+	winner = Meteor.users.findOne({'username':winner});
+
+	Meteor.users.update(
+		{
+			'username':winner.username
+		},
+		{
+			$set:{
+				'profile.title': findTitle(winner.profile.rankPoint)
+			}
+		}
+	);
+	Meteor.users.update(
+		{
+			'username':loser
+		},
+		{
+			$inc:{
+				'profile.rankPoint':-1
+			}
+		}
+	);
+	loser = Meteor.users.findOne({'username':loser});
+	Meteor.users.update(
+		{
+			'username':loser.username
+		},
+		{
+			$set:{
+				'profile.title': findTitle(loser.profile.rankPoint)
+			}
+		}
+	); 
 }

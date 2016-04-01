@@ -1,16 +1,74 @@
 <template name='lobby'>
-	<div class='page-header'><h1>Game Lobby</h1></div>
-	<div class='jumbotron'>
-		<div class='row'>
-		{{#if currentUser}}
-			{{#each rooms}}
-				{{#unless full}}
-					<div class='room col-xs-3'>
-						<a href='/room/{{number}}'>{{name}}</a>
-					</div>
-				{{/unless}}
-			{{/each}}
-		{{/if}}
+	
+
+	<div class='page-header'><h2>Game Lobby</h2></div>
+	<div class='row'>
+		<div class='col-sm-4'>
+			<h4>Player Stats</h4><hr>
+			<div class='shadow' id='player_status_box'>
+				{{#if currentUser}}
+					ID: {{currentUser.username}}
+					<br>
+					Rank Point: {{currentUser.profile.rankPoint}}
+					<br>
+					Title: {{currentUser.profile.title}}
+				{{/if}}
+			</div>
+
+			<h4>Players Ranking</h4>
+<!-- 			<div class='checkbox'>
+				<label><input id='showOnlineCheck' type='checkbox'>Show Online</label>
+			</div> -->
+			<hr>
+			<div id='player_list' class='shadow'>
+				<table class='table'>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Title</th>
+							<th>RankPoint</th>
+							<th>Online</th>
+						</tr>
+					</thead>
+					<tbody>
+						{{#if currentUser}}
+							{{#each usersList}}
+								<tr>
+									<td>{{username}}</td>
+									<td>{{profile.title}}</td>
+									<td>{{profile.rankPoint}}</td>
+									{{#if profile.login}}
+									<td><span class="glyphicon glyphicon-ok-circle" style='color:green;'></span></td>
+									{{else}}
+									<td><span class="glyphicon glyphicon-remove" style='color:red;'></span></td>
+									{{/if}}
+								</tr>
+							{{/each}}
+						{{/if}}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class='col-sm-8'>
+			<h4>Game Rooms</h4><hr>
+			<div class='rooms shadow'>
+				<div class='row'>
+				{{#if currentUser}}
+					{{#each rooms}}
+						{{#unless full}}
+							<div class='room col-xs-3 shadow'>
+								<a href='/room/{{number}}'>{{name}}</a>
+							</div>
+						{{/unless}}
+					{{/each}}
+				{{/if}}
+				</div>
+			</div>
+			<h4>Chat</h4><hr>
+			<div class='shadow' id='chatroom'> 
+				chat
+			</div>
 		</div>
 	</div>
+
 </template>

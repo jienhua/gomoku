@@ -9,7 +9,8 @@ Template.register.events({
 			password: password,
 			profile:{
 				login: true,
-				rankPoint: 10
+				rankPoint: 10,
+				title: 'NewBie'
 			}
 		},function(error){
 			if(error){

@@ -6,11 +6,44 @@
 	padding: 20px;
 	border-radius: 5px;
 	color: gray;
+}
+
+.rooms{
+	margin: 5px;
+	padding: 20px;
+	background-color: white;
+}
+
+#player_status_box{
+	background-color: white;
+	margin:5px;
+	margin-bottom: 20px;
+	padding: 5px;
+}
+
+.page-header{
+	margin-top: 0px !important;
+}
+
+.shadow{
 	box-shadow:0 1px 7px rgba(0,0,0,0.4);
     -webkit-box-shadow:0 1px 7px rgba(0,0,0,0.4);
     -moz-box-shadow:0 1px 7px rgba(0,0,0,0.4);
     -ms-box-shadow:0 1px 7px rgba(0,0,0,0.4);
 }
-.jumbotron{
+
+hr{
+	margin-top: 5px;
+}
+
+#chatroom{
+	background-color: black;
+	padding: 5px;
+	margin:5px;
+}
+
+#player_list{
 	background-color: white;
+	padding: 5px;
+	margin:5px;
 }
