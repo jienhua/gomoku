@@ -1,17 +1,35 @@
 <template name='navigation'>
+	<nav class='navbar navbar-inverse navbar-static-top'>
+		<div class='container-fluid'>
+			<div class='navbar-header'>
+				<p class='navbar-brand'>MrHaha Gomoku</p>
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+		        <span class="icon-bar"></span>
+		        <span class="icon-bar"></span>  
+		        <span class="icon-bar"></span>
+		      	</button>
+			</div>
+			<div id='navbar' class='navbar-collapse collapse'>
+				<ul class='nav navbar-nav navbar-right'>
+					<li><a href='{{pathFor route="home"}}'>Home</a></li>
+					<li><a href='{{pathFor route="lobby"}}'>Lobby</a></li>
+					{{#if currentUser}}
+						<li><a href='#' class='logout'>Logout</a></li>
+					{{else}}
+						<li><a href='{{pathFor route="register"}}'>Register</a></li>
+						<li><a href='{{pathFor route="login"}}'>Login</a></li>
+					{{/if}}
+				</ul>
+			</div>
+		</div>
+	</nav>
 	<ul>
-		<li><a href='{{pathFor route="home"}}'>Home</a></li>
-		<li><a href='{{pathFor route="lobby"}}'>Lobby</a></li>
 		{{#if currentUser}}
 			{{#each rooms}}
 				{{#unless full}}
 					<li><a href='/room/{{number}}'>{{name}}</a></li>
 				{{/unless}}
 			{{/each}}
-			<li><a href='#' class='logout'>Logout</a></li>
-		{{else}}
-			<li><a href='{{pathFor route="register"}}'>Register</a></li>
-			<li><a href='{{pathFor route="login"}}'>Login</a></li>
 		{{/if}}
 	</ul>
 </template>

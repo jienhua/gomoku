@@ -8,9 +8,9 @@ Template.navigation.events({
 	}
 });
 
-Template.navigation.helpers({
-	'rooms':function(){
-		return Rooms.find({name:{$ne:'Lobby'}});
-	}
+// Template.navigation.helpers({
+// 	'rooms':function(){
+// 		return Rooms.find({name:{$ne:'Lobby'}});
+// 	}
 
-});
+// });
