@@ -1,25 +1,35 @@
 <template name='room'>
-{{#if currentUser}}
+<!-- {{#if currentUser}}
 	Hello, {{username}} !!
+{{/if}} -->
+<div class='announcement'>
+{{#if isStart}}
+	{{#unless isGameEnd}}
+		<div class='text-center'>
+			<h1>{{gameName}}</h1>
+		</div>
+	{{else}}
+		<div class='text-center'>
+			<h1>{{winner}} is the Winner!!</h1>
+			{{#if isSurrender}}
+				{{surrender}} surrendered.	
+			{{/if}}
+		</div>
+	{{/unless}}
 {{/if}}
+</div>
 <div class='row'>
 	<div class='col-sm-3'>
 		<h3>This is {{name}}</h3>
 		{{#if isStart}}
-			{{gameName}}
-			{{#unless isGameEnd}}
-				<br>
-				You are using <img src="/images/{{blackOrWhite}}" />
-				<br>
-				{{whosTurn}}
-			{{else}}
-				{{#if isSurrender}}
+			{{#if isPlayer}}
+				{{#unless isGameEnd}}
 					<br>
-					{{surrender}} surrendered.	
-				{{/if}}
-				<br>
-				The Winner is : {{winner}}
-			{{/unless}}
+					You are using <img src="/images/{{blackOrWhite}}" />
+					<br>
+					{{whosTurn}}	
+				{{/unless}}
+			{{/if}}
 		{{else}}
 		<h4>Player List</h4>
 		<div class='player_list'>
@@ -35,17 +45,26 @@
 			<option value='normal'>Normal</option>
 			<option value='trid'>Traditional</option>
 		</select> -->
-		<br><br>
+	<!-- 	{{> roomChat roomNumber=roomNumber}} -->
+
+		<br>
+
 		{{#if isStart}}
-			{{#unless isGameEnd}}
-				<input type='button' class='btn btn-info' id='surrender_btn' value='Surrender'><br><br>
-			{{else}}
-				<input type='button' class='btn btn-info' id='reset_game_btn' value='Reset Game'><br><br>
-			{{/unless}}
+			{{#if isPlayer}}
+				{{#unless isGameEnd}}
+					<input type='button' class='btn btn-info' id='surrender_btn' value='Surrender'><br><br>
+				{{else}}
+					<input type='button' class='btn btn-info' id='reset_game_btn' value='Reset Game'><br><br>
+				{{/unless}}
+			{{/if}}
 		{{else}}
-			<input type='button' class='btn btn-success' id='ready_btn' value='{{ready}}'><br><br>
 			{{#if full}}
-				<input type='button' class='btn btn-primary' id='start_btn' value='Start'><br><br>
+				{{#if isPlayer}}
+					<input type='button' class='btn btn-primary' id='start_btn' value='Start'><br><br>
+					<input type='button' class='btn btn-success' id='ready_btn' value='{{ready}}'><br><br>
+				{{/if}}
+			{{else}}
+				<input type='button' class='btn btn-success' id='ready_btn' value='{{ready}}'><br><br>
 			{{/if}}
 		{{/if}}
 		<input type='button' class='btn btn-danger' id='leave_btn' value='Leave Room'><br><br>

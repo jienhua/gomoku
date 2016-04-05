@@ -1,8 +1,10 @@
 <template name='login'>
-	<h2>Login</h2>
-	<form class='login'>
-		<p>Username: <input type='username' name='username'></p>
-		<p>Password: <input type='password' name='password'></p>
-		<p><input class='btn btn-primary' type='submit' value='Login'></p>
+	<form class='login form-signin'>
+		<h2 class='form-signin-heading'>Please sign in</h2>
+		<label for='inputUsername' class='sr-only'>Username</label>
+		<input type='username' id='inputUsername' class='form-control' name='username' placeholder='Username' autofocus>
+		<label for='inputPassword' class='sr-only'>Password</label>
+		<input type='password' id='inputPassword' class='form-control' name='password' placeholder='Password'>
+		<input class='btn btn-primary' type='submit' value='Login'>
 	</form> 
 </template>

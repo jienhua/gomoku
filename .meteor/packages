@@ -15,11 +15,11 @@ tracker                 # Meteor's client-side reactive programming library
 es5-shim                # ECMAScript 5 compatibility for older browsers.
 ecmascript              # Enable ECMAScript2015+ syntax in app code
 
-autopublish             # Publish all data to the clients (for prototyping)
-insecure                # Allow all DB writes from clients (for prototyping)
 accounts-password
 twbs:bootstrap
 iron:router
 meteorhacks:aggregate
 standard-minifier-css
 standard-minifier-js
+mizzao:user-status
+themeteorchef:jquery-validation

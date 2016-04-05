@@ -1,11 +1,7 @@
-/*img{
-	float:left;
-}
-
-.board{
-	left: 300px;
-	background-color: black;
-}*/
 body{
 	background-color: #ccccb3;
+}
+
+.text-center{
+	text-align:center;
 }

@@ -3,7 +3,7 @@
 
 	<div class='page-header'><h2>Game Lobby</h2></div>
 	<div class='row'>
-		<div class='col-sm-4'>
+		<div class='col-sm-5'>
 			<h4>Player Stats</h4><hr>
 			<div class='shadow' id='player_status_box'>
 				{{#if currentUser}}
@@ -37,7 +37,7 @@
 									<td>{{username}}</td>
 									<td>{{profile.title}}</td>
 									<td>{{profile.rankPoint}}</td>
-									{{#if profile.login}}
+									{{#if status.online}}
 									<td><span class="glyphicon glyphicon-ok-circle" style='color:green;'></span></td>
 									{{else}}
 									<td><span class="glyphicon glyphicon-remove" style='color:red;'></span></td>
@@ -49,24 +49,24 @@
 				</table>
 			</div>
 		</div>
-		<div class='col-sm-8'>
+		<div class='col-sm-7'>
 			<h4>Game Rooms</h4><hr>
 			<div class='rooms shadow'>
 				<div class='row'>
 				{{#if currentUser}}
 					{{#each rooms}}
-						{{#unless full}}
+						<!-- {{#unless full}} -->
 							<div class='room col-xs-3 shadow'>
 								<a href='/room/{{number}}'>{{name}}</a>
 							</div>
-						{{/unless}}
+						<!-- {{/unless}} -->
 					{{/each}}
 				{{/if}}
 				</div>
 			</div>
-			<h4>Chat</h4><hr>
+			<h4>Chat <strike>(Place to talk shit and making fun of your opponent)</strike></h4><hr>
 			<div class='shadow' id='chatroom'> 
-				chat
+				{{> lobbyChat}}
 			</div>
 		</div>
 	</div>

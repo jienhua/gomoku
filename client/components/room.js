@@ -81,6 +81,14 @@ Template.room.helpers({
 		var gameId = this.gameId;
 		var currentGame = Games.findOne({_id: gameId});
 		return currentGame.surrender;
+	},
+	'isPlayer':function(){
+		var user = Meteor.user();
+		if(Rooms.findOne({$and:[{_id:this._id},{players:{$in:[user.username]}}]})){	
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 });
@@ -90,32 +98,37 @@ Template.room.events({
 	'click #ready_btn':function(event){
 		
 		var currentPlayers = Rooms.findOne({_id:this._id}).players.length;
-		var isRoomFull = false;
+		var isGameFull = false;
 		if(currentPlayers >= 2){
-			isRoomFull = true;
+			isGameFull = true;
 		}else{
-			Rooms.update({_id:this._id},{$set:{full: false}});
+			// Rooms.update({_id:this._id},{$set:{full: false}});
+			Meteor.call('setGameIsFull', this._id, false);
 		}
 		var user = Meteor.user();
 		if(Rooms.findOne({$and:[{_id:this._id},{players:{$in:[user.username]}}]}))
 		{
 			// find the player in the playerlist, delete player from list
-			Rooms.update(
-				{_id:this._id}, 
-				{$pull:{players:user.username}}
-			);
+			// Rooms.update(
+			// 	{_id:this._id}, 
+			// 	{$pull:{players:user.username}}
+			// );
+			Meteor.call('inOutGame', this._id, 'out', user.username);
 			
-			Rooms.update({_id:this._id},{$set:{full: false}});
+			// Rooms.update({_id:this._id},{$set:{full: false}});
+			Meteor.call('setGameIsFull', this._id, false);
 		}else
 		{
-			if(!isRoomFull){
-				Rooms.update(
-					{_id:this._id},
-					{$push:{players: user.username}}
-				);
+			if(!isGameFull){
+				// Rooms.update(
+				// 	{_id:this._id},
+				// 	{$push:{players: user.username}}
+				// );
+				Meteor.call('inOutGame', this._id, 'in', user.username);
 
 				if(currentPlayers === 1){
-					Rooms.update({_id:this._id},{$set:{full: true}});
+					// Rooms.update({_id:this._id},{$set:{full: true}});
+					Meteor.call('setGameIsFull', this._id, true);
 				}
 			}
 		}
@@ -143,15 +156,19 @@ Template.room.events({
 		Meteor.call('reset_game', roomNumber);
 	},
 	'click #leave_btn':function(event){
-		var roomNumber = this.number;
-		//if(confirm('Leave the room? if you are currently in the game, you will automatically lost the game.')){}
-		Meteor.call('leave_room', roomNumber, function(error, result){
-			if(error){
-				throw new Meteor.Error('leave room Error', 'Error when leaving the room');
-			}else{
-				Meteor.call('checkRoomPlayer', roomNumber);
-			}
-		});
+		var user = Meteor.user();
+		if(Rooms.findOne({$and:[{_id:this._id},{players:{$in:[user.username]}}]}))
+		{	
+			var roomNumber = this.number;
+			//if(confirm('Leave the room? if you are currently in the game, you will automatically lost the game.')){}
+			Meteor.call('leave_room', roomNumber, function(error, result){
+				if(error){
+					throw new Meteor.Error('leave room Error', 'Error when leaving the room');
+				}else{
+					Meteor.call('checkRoomPlayer', roomNumber);
+				}
+			});
+		}
 		Router.go('lobby');
 	}
 });
@@ -185,3 +202,4 @@ function startNewGame(roomNumber, players){
 // window.onbeforeunload = function () {
 //     return "Are you sure that you want to leave this page?";
 // }
+

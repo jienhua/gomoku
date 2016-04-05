@@ -191,6 +191,47 @@ Meteor.methods({
 		if(room.players.length == 0){
 			resetGame(roomNumber);
 		}
+	},
+	'submitLobbyMessage':function(data){
+		data.time = Date.now();
+		LobbyMessages.insert(data);
+	},
+	'inOutGame':function(id, inOrOut, name){
+		if(inOrOut === 'in'){
+			Rooms.update(
+				{
+					'_id': id
+				},
+				{
+					$push:{
+						players:name
+					}
+				}
+			);
+		}else{
+			Rooms.update(
+				{
+					'_id': id
+				},
+				{
+					$pull:{
+						players:name
+					}
+				}
+			);
+		}
+	},
+	'setGameIsFull':function(id, isFull){
+		Rooms.update({_id:id}, {$set:{full:isFull}});
+	},
+	submitRoomMessage:function(data, number){
+		console.log(data);
+		console.log(number);
+		data.time = Date.now();
+		Rooms.update({'number': number},{
+			$push:{messanges:data}
+		});
+		
 	}
 });
 
@@ -344,19 +385,19 @@ function findTitle(point){
 	
 	var title ='';
 	if(point <= 0){
-		title = 'YourMonIsCrying';
+		title = 'Dirt';
 	}else if(point >= 1 && point < 5){
-		title = 'Noob';
+		title = 'Bronze';
 	}else if(point >= 5 && point < 15){
-		title = 'Newbie';
+		title = 'Silver';
 	}else if(point >= 15 && point <20){
-		title = 'KnowTheRules';
+		title = 'Gold';
 	}else if(point >= 20 && point < 30){
-		title = 'Skilled';
+		title = 'Platinum';
 	}else if(point >= 30 && point < 9999){
-		title = 'Profession';
+		title = 'Diamond';
 	}else if(point > 9999){
-		title = 'God of Gomoku';
+		title = 'The God';
 	}
 	return title;
 }

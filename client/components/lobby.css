@@ -36,14 +36,19 @@ hr{
 	margin-top: 5px;
 }
 
-#chatroom{
+/*#chatroom{
 	background-color: black;
 	padding: 5px;
 	margin:5px;
-}
+}*/
 
 #player_list{
 	background-color: white;
 	padding: 5px;
 	margin:5px;
+}
+
+strike{
+	//background-color:#f0f0f0;
+	color:#666;
 }
