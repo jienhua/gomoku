@@ -141,9 +141,9 @@ Template.room.events({
 		startNewGame(roomNumber, players);
 	},
 	'click #surrender_btn': function(event){
-		console.log('clikc surrender button');
+		//console.log('clikc surrender button');
 		var gameId = this.gameId;
-		console.log('gameId: ' + gameId);
+		//console.log('gameId: ' + gameId);
 		var currentGame = Games.findOne({_id: gameId});
 		var roomNumber = this.number;
 		var surrender = confirm('Do you wnat to surrender this game?');

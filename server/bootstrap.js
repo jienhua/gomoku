@@ -52,6 +52,7 @@ function initBoard(){
 	board.p1_put = [];
 	board.p2_put = [];
 	board.name = 'new_board';
+	board.lastHand = -1;
 
 	// 17
 	for(var y=0; y<17; y++){

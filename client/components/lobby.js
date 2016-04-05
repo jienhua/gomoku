@@ -11,7 +11,7 @@ Template.lobby.helpers({
 		// 	return Meteor.users.find({},{sort:{'profile.rankPoint':-1}});
 		// }
 		//console.log('usersList '+ Meteor.users.find().count());
-		return Meteor.users.find({},{sort:{'profile.rankPoint':-1}});
+		return Meteor.users.find({},{sort:{'profile.rankPoint':-1}, limit: 10});
 
 	}
 

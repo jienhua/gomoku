@@ -46,9 +46,10 @@ hr{
 	background-color: white;
 	padding: 5px;
 	margin:5px;
+	max-height: 400px;
+	overflow: auto;
 }
 
 strike{
-	//background-color:#f0f0f0;
 	color:#666;
 }

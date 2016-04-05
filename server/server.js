@@ -49,22 +49,20 @@ Meteor.methods({
 		newBoard.name = 'used';
 		delete newBoard._id;
 		newBoard = Boards.insert(newBoard);
-		// console.log(roomNumber);
-		// console.log(newBoard);
 		Rooms.update({'number':roomNumber},{$set:{'boardId': newBoard}});
 
 		return newBoard;
 	},
 	'putPiece':function(boardId, number, gameId){
-		
+
 		var currentGame = Games.findOne({'_id':gameId});
 		var pieceType = whichPieces(currentGame);
-		
+
 		if(isRightTurn(currentGame) && 
 		   isAvailableMove(boardId, number) &&
 		   !currentGame.end){
-			
-			if(pieceType ==='trid_black.png'){
+
+			if(pieceType ==='p1.png'){
 
 				Boards.update(
 					{
@@ -86,7 +84,7 @@ Meteor.methods({
 							
 					}
 				);
-
+				updateLasthand(boardId, number, 'p1');
 			}else{
 
 				Boards.update(
@@ -109,8 +107,9 @@ Meteor.methods({
 							
 					}
 				);
-
+				updateLasthand(boardId, number, 'p2');
 			}
+
 
 			Games.update(
 				{
@@ -124,10 +123,8 @@ Meteor.methods({
 			);
 
 			if(checkWin(currentGame, boardId, number)){
-				console.log('gameId: ' + gameId);
 
 				var currentUserName = Meteor.user().username;
-				console.log('winner: ' + currentUserName);
 				Games.update(
 					{
 						'_id': gameId
@@ -225,8 +222,6 @@ Meteor.methods({
 		Rooms.update({_id:id}, {$set:{full:isFull}});
 	},
 	submitRoomMessage:function(data, number){
-		console.log(data);
-		console.log(number);
 		data.time = Date.now();
 		Rooms.update({'number': number},{
 			$push:{messanges:data}
@@ -241,9 +236,9 @@ function whoGoesFirst(){
 
 function whichPieces(currentGame){
 	if(currentGame.turn%2 ===0){
-		return 'trid_black.png';
+		return 'p1.png';
 	}else{
-		return 'trid_white.png';
+		return 'p2.png';
 	}
 }
 
@@ -412,9 +407,6 @@ function modifyPoint(name, title, gameId){
 		}else{
 			loser = currentGame.player1;
 		}
-		console.log(title);
-		console.log('winner: ' + winner);
-		console.log('loser: ' + loser);
 		// modified point
 	}else{
 
@@ -426,10 +418,6 @@ function modifyPoint(name, title, gameId){
 		}else{
 			winner = currentGame.player1;
 		}
-
-		console.log(title);
-		console.log('winner: ' + winner);
-		console.log('loser: ' + loser);
 	}
 
 	Meteor.users.update(
@@ -476,4 +464,43 @@ function modifyPoint(name, title, gameId){
 			}
 		}
 	); 
+}
+
+//updateLasthand(currentBoard.lastHand, number, 'p1');
+function updateLasthand(boardId, thisHand, turn){
+	var currentBoard = Boards.findOne({'_id': boardId});
+	var lastHand = currentBoard.lastHand;
+	var pieceStyle ='';
+	if(lastHand !== -1){
+		if(turn ==='p1'){
+			pieceStyle = 'trid_white.png';
+		}else{
+			pieceStyle = 'trid_black.png';
+		}
+	}
+
+	Boards.update(
+		{
+			'_id':boardId,
+			'pieces':{
+				$elemMatch:{
+					'number':parseInt(lastHand)
+				}
+			}
+		},
+		{
+			$set:{
+				'pieces.$.position': pieceStyle
+			}
+		}
+	);
+
+	Boards.update(
+		{'_id':boardId},
+		{$set:{
+			lastHand:thisHand
+		}
+		}
+	);
+
 }
