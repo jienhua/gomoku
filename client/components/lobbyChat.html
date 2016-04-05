@@ -1,0 +1,15 @@
+<template name='lobbyChat'>
+
+	<div class='messages_main'>
+		{{#each messages}}
+			<div class='messageString' style='color:{{color}};'><strong>{{name}}: </strong> {{message}}</div>
+		{{/each}}
+	</div>
+	<div class='input_main'>
+		<form class='input'>
+		<label for='message_box' class='sr-only'></label> 
+		<input type='text' class='form-control' id='message_box' name='message' placeholder='Messages...'>
+		<input type='submit' class='sr-only' value='Submit'>
+		</form>
+	</div>
+</template>

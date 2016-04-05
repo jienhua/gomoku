@@ -1,0 +1,1 @@
+LobbyMessages = new Mongo.Collection('lobbyMessages');

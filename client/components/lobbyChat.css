@@ -1,0 +1,10 @@
+.messages_main{
+	background-color: black;
+	color:black;
+	min-height: 200px;
+	max-height: 200px;
+}
+
+.messageString{
+	color:white;
+}
