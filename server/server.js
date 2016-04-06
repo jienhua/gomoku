@@ -392,7 +392,7 @@ function findTitle(point){
 	}else if(point >= 30 && point < 9999){
 		title = 'Diamond';
 	}else if(point > 9999){
-		title = 'The God';
+		title = 'GM';
 	}
 	return title;
 }

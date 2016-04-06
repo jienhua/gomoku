@@ -35,7 +35,7 @@
 							{{#each usersList}}
 								<tr>
 									<td>{{username}}</td>
-									<td>{{profile.title}}</td>
+									<td><span class='glyphicon glyphicon-triangle-bottom {{profile.title}}'></span> {{profile.title}}</td>
 									<td>{{profile.rankPoint}}</td>
 									{{#if status.online}}
 									<td><span class="glyphicon glyphicon-ok-circle" style='color:green;'></span></td>

@@ -8,7 +8,7 @@ Template.register.onRendered(function(){
 				password: password,
 				profile:{
 					rankPoint: 10,
-					title: 'NewBie'
+					title: 'Bronze'
 				}
 			},function(error){
 				if(error){

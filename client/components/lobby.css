@@ -32,6 +32,34 @@
     -ms-box-shadow:0 1px 7px rgba(0,0,0,0.4);
 }
 
+.Silver{
+	color:rgba(192,192,192,1);
+}
+
+.Dirt{
+	color:rgba(101,67,33,1);
+}
+
+.Bronze{
+	color:rgba(205, 127, 50,1);
+}
+
+.Gold{
+	color:rgba(212, 175, 55,1);
+}
+
+.Platinum{
+	color:rgba(16, 167, 91,1);
+}
+
+.Diamond{
+	color:rgba(84, 127, 178,1);
+}
+
+.GM{
+	color:rgba(147,112,219, 1);
+}
+
 hr{
 	margin-top: 5px;
 }
